@@ -1,0 +1,39 @@
+////////////////////////////////////////////////////////////////
+package net.liftoff;
+////////////////////////////////////////////////////////////////
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////
+public class Background
+{
+    private Texture texture = null;
+
+    public Background( String path )
+    {
+        setBackground( path );
+    }
+    public void render( SpriteBatch batch )
+    {
+        int width = Gdx.graphics.getWidth();
+        int height = Gdx.graphics.getHeight();
+        batch.draw( texture, 0, 0, width, height );
+    }
+    public void setBackground( String path )
+    {
+        if( texture != null ){
+            
+            dispose();
+        }
+        texture = new Texture( Gdx.files.internal( path ));
+    }
+    public void dispose()
+    {
+        texture.dispose();
+    }
+}
+////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////
