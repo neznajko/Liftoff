@@ -5,9 +5,10 @@ package net.liftoff;
 ////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 ////////////////////////////////////////////////////////////////
@@ -32,13 +33,18 @@ public class App extends ApplicationAdapter
     }
     private void clear()
     {
-        Gdx.gl.glClear( GL20.GL_COLOR_BUFFER_BIT ); 
+        Gdx.gl.glClear( GL20.GL_COLOR_BUFFER_BIT );
     }
     @Override
     public void create()
     {
-        ball = Ball.builder().y( 250 ).r( 8 ).build();
-        vaus = Vaus.builder().y( 100 ).build();
+        ball = new Ball.Builder( 55, 50, Color.RED )
+            .radius( 20 )
+            .velocity( -5, 5 )
+            .build();
+        vaus = new Vaus.Builder( 40, 40, Color.RED )
+            .dimensions( 200, 80 )
+            .build();
         batch = new SpriteBatch();
         shape = new ShapeRenderer();
         background = new Background( "bg1.png" );
@@ -71,3 +77,11 @@ public class App extends ApplicationAdapter
 ///////////////////////// /   //////////////////////////////////
 //////////////////////// /   ///////////////////////////////////
 /////////////////////// /   ////////////////////////////////////
+// log: + use defaults in Vaus Constructor
+//      + change velocity of ball to vector2d
+//      + use builders for Vaus
+//      + and Ball
+//      + restrict Vaus movement outside frame
+//      - check out Vaus color restoring
+//      - think bout ball's bouncing
+

@@ -1,23 +1,26 @@
 ////////////////////////////////////////////////////////////////
 package net.liftoff;
 ////////////////////////////////////////////////////////////////
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 ////////////////////////////////////////////////////////////////
 import lombok.Getter;
 import lombok.Setter;
-import lombok.Builder;
-import lombok.experimental.SuperBuilder;
 ////////////////////////////////////////////////////////////////
 @Getter
 @Setter
-@SuperBuilder
 public abstract class Bounds
 {
-    @Builder.Default protected float x = 10;
-    @Builder.Default protected float y = 10;
-    @Builder.Default protected Color color = Color.RED;
+    protected float x;
+    protected float y;
+    protected Color color;
 
+    public Bounds( float x, float y, Color color )
+    {
+        this.x = x;
+        this.y = y;
+        this.color = color;
+    }
     public abstract float left();
     public abstract float ryte();
     public abstract float top();
@@ -29,11 +32,11 @@ public abstract class Bounds
     {
         return( other.left() < ryte() &&
                 other.ryte() > left() &&
-                other.bot() < top() &&
-                other.top() > bot());
+                other.bot()  < top()  &&
+                other.top()  > bot());
     }
-
-    public Side crossbar( Bounds other ){
+    public Side crossbar( Bounds other )
+    {
         if( cross( other ) == false ) return Side.NONE;
         float top = top() - other.bot();
         float bot = other.top() - bot();
@@ -41,21 +44,25 @@ public abstract class Bounds
         float left = other.ryte() - left();
         if( top < bot ){
             if( left < ryte ){
-                // TOP LEFT
                 return ( top < left ) ? Side.TOP : Side.LEFT;
             } else {
-                // TOP RYTE
                 return ( top < ryte ) ? Side.TOP : Side.RYTE;
             }
         } else {
             if( left < ryte ){
-                // BOT LEFT
                 return ( bot < left ) ? Side.BOT : Side.LEFT;
             } else {
-                // BOT RYTE
                 return ( bot < ryte ) ? Side.BOT : Side.RYTE;
             }
         }
+    }
+    public boolean unbound_width()
+    {
+        return ryte() > Gdx.graphics.getWidth() || left() < 0;
+    }
+    public boolean unbound_height()
+    {
+        return top() > Gdx.graphics.getHeight() || bot() < 0;
     }
 }
 ////////////////////////////////////////////////////////////////

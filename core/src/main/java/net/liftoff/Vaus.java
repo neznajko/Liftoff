@@ -6,36 +6,57 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 ////////////////////////////////////////////////////////////////
-import lombok.Builder;
-import lombok.Builder.Default;
-import lombok.experimental.SuperBuilder;
-////////////////////////////////////////////////////////////////
 import net.liftoff.Ball;
 import net.liftoff.Bounds;
 ////////////////////////////////////////////////////////////////
-@SuperBuilder
 public class Vaus extends Bounds
 {
-    @Builder.Default private float speed = 200;
-    @Builder.Default private float width = 200;
-    @Builder.Default private float height = 100;
+    private static final float SPEED = 200f;
+    private static final float WIDTH = 200f;
+    private static final float HEIGHT = 100f;
 
-    private void keyboard()
+    private float speed;
+    private float width;
+    private float height;
+
+    private Vaus( Builder builder )
     {
-        float delta = Gdx.graphics.getDeltaTime();
-
-        if( Gdx.input.isKeyPressed( Keys.LEFT )){
-          
-            x -= speed * delta;
-        }
-        if( Gdx.input.isKeyPressed( Keys.RIGHT )){
-            
-            x += speed * delta;
-        }
+        super( builder.x, builder.y, builder.color );
+        speed = builder.speed;
+        width = builder.width;
+        height = builder.height;
     }
-    private float distance( Ball ball ){
-        float halflife = width / 2;
-        return ( ball.getX() - x - halflife ) / halflife;
+    public static class Builder
+    {
+        private float x;
+        private float y;
+        private Color color;
+        
+        private float speed = SPEED;
+        private float width = WIDTH;
+        private float height = HEIGHT;
+
+        public Builder( float x, float y, Color color )
+        {
+            this.x = x;
+            this.y = y;
+            this.color = color;
+        }
+        public Builder speed( float speed )
+        {
+            this.speed = speed;
+            return this;
+        }
+        public Builder dimensions( float width, float height )
+        {
+            this.width = width;
+            this.height = height;
+            return this;
+        }
+        public Vaus build()
+        {
+            return new Vaus( this );
+        }
     }
     @Override
     public float top()
@@ -57,44 +78,51 @@ public class Vaus extends Bounds
     {
         return x;
     }
+    private void keyboard()
+    {
+        float dt = Gdx.graphics.getDeltaTime();
+
+        if( Gdx.input.isKeyPressed( Keys.LEFT )){
+            x -= speed * dt;
+            if( unbound_width()){
+                x += speed * dt;
+            }        
+        }
+        if( Gdx.input.isKeyPressed( Keys.RIGHT )){
+            x += speed * dt;
+            if( unbound_width()){
+                x -= speed * dt;
+            }        
+        }
+    }
     public void update( Ball ball )
     {
         keyboard();
-        if( cross( ball )){
-            Gdx.app.log
-                ( "Collision",
-                  "Ball-X: " + ball.getX() +
-                  " Distance: " + distance( ball ) +
-                  " Cross: " + crossbar( ball )
-                  );
-            switch( crossbar( ball )){
-            case TOP:
-                ball.setYSpeed( -ball.getYSpeed());
-                if( distance( ball ) < 0 ){
-                    ball.setXSpeed( -Math.abs( ball.getXSpeed()));
-                } else {
-                    ball.setXSpeed( Math.abs( ball.getXSpeed()));
-                }
-                ball.setY( top() + ball.getR());
-                break;
-            case BOT:
-                ball.setYSpeed( -ball.getYSpeed());
-                ball.setY( bot() - ball.getR());
-                break;
-            case LEFT:
-                ball.setXSpeed( -ball.getXSpeed());
-                ball.setX( left() - ball.getR());
-                break;
-            case RYTE:
-                ball.setXSpeed( -ball.getXSpeed());
-                ball.setX( ryte() + ball.getR());
-                break;
-            }
-            color = Color.WHITE;
-        } else {
+
+        if( !cross( ball )){
             color = Color.BLUE;
+            return;
         }
-    }    
+        switch( crossbar( ball )){
+        case TOP:
+            ball.setVy( -ball.getVy());
+            ball.setY( top() + ball.getR());
+            break;
+        case BOT:
+            ball.setVy( -ball.getVy());
+            ball.setY( bot() - ball.getR());
+            break;
+        case LEFT:
+            ball.setVx( -ball.getVx());
+            ball.setX( left() - ball.getR());
+            break;
+        case RYTE:
+            ball.setVx( -ball.getVx());
+            ball.setX( ryte() + ball.getR());
+            break;
+        }
+        color = Color.WHITE;
+    }
     public void render( ShapeRenderer shape )
     {
         shape.setColor( color );
