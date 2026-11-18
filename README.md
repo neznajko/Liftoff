@@ -11,3 +11,9 @@ wrong ones, so I'm reassigning the targeting systems.
 - Ran a test projection in the forward viewport. The readout 
 looks clean, and the crew can finally see the layout before we 
 commit it to the mainframe.
+
+**18.11.26** – *Evening, crossing the outer edge of the starfield*
+- The last rocks drift past the viewport, slow and silver in the 
+starlight. Somewhere behind me, the Vaus hums across the test bay 
+floor as the ball ricochets above it—bright, quick, and impossible 
+to ignore. It’s finally bouncing the way it should.

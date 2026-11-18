@@ -42,7 +42,7 @@ public class App extends ApplicationAdapter
             .radius( 20 )
             .velocity( -5, 5 )
             .build();
-        vaus = new Vaus.Builder( 40, 40, Color.RED )
+        vaus = new Vaus.Builder( 40, 40, Color.BLUE )
             .dimensions( 200, 80 )
             .build();
         batch = new SpriteBatch();
@@ -77,11 +77,5 @@ public class App extends ApplicationAdapter
 ///////////////////////// /   //////////////////////////////////
 //////////////////////// /   ///////////////////////////////////
 /////////////////////// /   ////////////////////////////////////
-// log: + use defaults in Vaus Constructor
-//      + change velocity of ball to vector2d
-//      + use builders for Vaus
-//      + and Ball
-//      + restrict Vaus movement outside frame
-//      - check out Vaus color restoring
-//      - think bout ball's bouncing
-
+// log:
+//

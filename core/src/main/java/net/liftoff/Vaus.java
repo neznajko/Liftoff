@@ -18,6 +18,7 @@ public class Vaus extends Bounds
     private float speed;
     private float width;
     private float height;
+    private boolean ballHit = false;
 
     private Vaus( Builder builder )
     {
@@ -95,38 +96,36 @@ public class Vaus extends Bounds
             }        
         }
     }
+    private float center()
+    {
+        return x + width / 2;
+    }
+    private void dbg( Ball ball )
+    {
+        float off = hitOffset( ball );
+        float a = off*60f;
+        Gdx.app.log( "Collision",
+                     " hitOffset=" + off +
+                     " a=" + a );
+    }
     public void update( Ball ball )
     {
         keyboard();
 
-        if( !cross( ball )){
-            color = Color.BLUE;
-            return;
-        }
-        switch( crossbar( ball )){
-        case TOP:
-            ball.setVy( -ball.getVy());
-            ball.setY( top() + ball.getR());
-            break;
-        case BOT:
-            ball.setVy( -ball.getVy());
-            ball.setY( bot() - ball.getR());
-            break;
-        case LEFT:
-            ball.setVx( -ball.getVx());
-            ball.setX( left() - ball.getR());
-            break;
-        case RYTE:
-            ball.setVx( -ball.getVx());
-            ball.setX( ryte() + ball.getR());
-            break;
-        }
-        color = Color.WHITE;
+        ballHit = cross( ball );
+
+        if( !ballHit ) return;
+
+        ball.bounceOnVaus( crossbar( ball ), this );
     }
     public void render( ShapeRenderer shape )
     {
-        shape.setColor( color );
+        shape.setColor( ballHit ? Color.WHITE : color );
         shape.rect( x, y, width, height );
+    }
+    public float hitOffset( Ball ball )
+    {
+        return 2f*( ball.getX() - x )/width - 1f;
     }
 }
 ////////////////////////////////////////////////////////////////

@@ -6,13 +6,8 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 ////////////////////////////////////////////////////////////////
-import lombok.Getter;
-import lombok.Setter;
-////////////////////////////////////////////////////////////////
 import net.liftoff.Bounds;
 ////////////////////////////////////////////////////////////////
-@Getter
-@Setter
 public class Ball extends Bounds
 {
     private static final float R = 12;
@@ -20,17 +15,13 @@ public class Ball extends Bounds
     private static final float VY = 4;
 
     private float r;
-    private float vx;
-    private float vy;
-    private float speed;
+    private Vector2 v;
     
     private Ball( Builder builder )
     {
         super( builder.x, builder.y, builder.color );
         r = builder.r;
-        vx = builder.vx;
-        vy = builder.vy;
-        speed = Vector2.len( vx, vy );
+        v = new Vector2( builder.vx, builder.vy );
     }
     public static class Builder
     {
@@ -86,16 +77,38 @@ public class Ball extends Bounds
     }
     public void update()
     {
-        x += vx;
-        y += vy;
+        x += v.x;
+        y += v.y;
 
-        if( unbound_width() ){ vx = -vx; }
-        if( unbound_height()){ vy = -vy; }
+        if( unbound_width() ){ v.x = -v.x; }
+        if( unbound_height()){ v.y = -v.y; }
     }
     public void render( ShapeRenderer shape )
     {
         shape.setColor( color );
         shape.circle( x, y, r );
+    }
+    void bounceOnVaus( Side side, Vaus vaus )
+    {
+        switch( side ){
+        case TOP:
+            y = vaus.top() + r;
+            float a = 90f - vaus.hitOffset( this )*60f;
+            v.setAngleDeg( a );
+            break;
+        case BOT:
+            y = vaus.bot() - r;
+            v.y = -v.y;
+            break;
+        case LEFT:
+            x = vaus.left() - r;
+            v.x = -v.x;
+            break;
+        case RYTE:
+            x = vaus.ryte() + r;
+            v.x = -v.x;
+            break;
+        }
     }
 }
 ////////////////////////////////////////////////////////////////
